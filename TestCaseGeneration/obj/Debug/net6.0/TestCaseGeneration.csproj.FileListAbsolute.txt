@@ -1,0 +1,15 @@
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\bin\Debug\net6.0\TestCaseGeneration.exe
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\bin\Debug\net6.0\TestCaseGeneration.deps.json
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\bin\Debug\net6.0\TestCaseGeneration.runtimeconfig.json
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\bin\Debug\net6.0\TestCaseGeneration.dll
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\bin\Debug\net6.0\TestCaseGeneration.pdb
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\obj\Debug\net6.0\TestCaseGeneration.csproj.AssemblyReference.cache
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\obj\Debug\net6.0\TestCaseGeneration.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\obj\Debug\net6.0\TestCaseGeneration.AssemblyInfoInputs.cache
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\obj\Debug\net6.0\TestCaseGeneration.AssemblyInfo.cs
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\obj\Debug\net6.0\TestCaseGeneration.csproj.CoreCompileInputs.cache
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\obj\Debug\net6.0\TestCaseGeneration.dll
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\obj\Debug\net6.0\refint\TestCaseGeneration.dll
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\obj\Debug\net6.0\TestCaseGeneration.pdb
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\obj\Debug\net6.0\TestCaseGeneration.genruntimeconfig.cache
+C:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\obj\Debug\net6.0\ref\TestCaseGeneration.dll
