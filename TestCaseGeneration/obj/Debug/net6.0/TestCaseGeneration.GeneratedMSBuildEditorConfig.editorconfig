@@ -8,4 +8,4 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = TestCaseGeneration
-build_property.ProjectDir = c:\Users\100624914\OneDrive\Documents\GitHub\Side-Projects\Algorithms\C#\TestCaseGeneration\TestCaseGeneration\
+build_property.ProjectDir = C:\Users\100624914\OneDrive\Documents\GitHub\Testcase-Generation\TestCaseGeneration\

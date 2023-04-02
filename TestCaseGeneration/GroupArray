@@ -1,0 +1,101 @@
+
+using System.Text.RegularExpressions;
+using static TestCaseGenerator.RegexConstants;
+
+namespace TestCaseGenerator
+{
+    public class GroupArray : GroupInteger
+    {
+
+        public int ArrayDimensionValue
+        {
+            get => _arrayDimensionValue;
+            set
+            {
+                if (value < 1)
+                    throw new Exception("Invalid array dimension value: must be greater than 0");
+                _arrayDimensionValue = value;
+            }
+        }
+        public int ArrayDimensionRangeFirstValue
+        {
+            get => _arrayDimensionRangeFirstValue;
+            set
+            {
+                if (value < 1)
+                    throw new Exception("Invalid array dimension range first value: must be greater than 0");
+                _arrayDimensionRangeFirstValue = value;
+            }
+        }
+        public int ArrayDimensionRangeSecondValue
+        {
+            get => _arrayDimensionRangeSecondValue;
+            set
+            {
+                if (value < 1)
+                    throw new Exception("Invalid array dimension range second value: must be greater than 0");
+                _arrayDimensionRangeSecondValue = value;
+            }
+        }
+        public Operator ArrayDimensionComparisonOperator
+        {
+            get => _arrayDimensionomparisonOperator;
+            set
+            {
+                if (value == null)
+                    throw new Exception("Invalid array dimension comparison operator: must not be null");
+                _arrayDimensionomparisonOperator = value;
+            }
+        }
+
+        public bool ArrayDimensionValueSuccess { get; }
+        public bool ArrayDimensionRangeSuccess { get; }
+        public bool ArrayDimensionComparisonOperatorSuccess { get; }
+
+        private int _arrayDimensionValue;
+        private int _arrayDimensionRangeFirstValue;
+        private int _arrayDimensionRangeSecondValue;
+        private Operator _arrayDimensionomparisonOperator;
+
+        public GroupArray(Match match) : base(match)
+        {
+            if (ArrayDimensionValueSuccess = match.Groups[ARRAY_DIM_VALUE].Success)
+            {
+                ValidateArrayDimensionValue(match);
+            }
+            if (ArrayDimensionRangeSuccess =match.Groups[GROUP_ARRAY_RANGE].Success)
+            {
+                ValidateArrayDimensionRange(match);
+            }
+            if (ArrayDimensionComparisonOperatorSuccess =  match.Groups[ARRAY_DIM_COMPARISON_OPERATOR].Success)
+            {
+                ValidateArrayDimensionComparisonOperator(match);
+            }
+        }
+        private void ValidateArrayDimensionComparisonOperator(Match match)
+        {
+            if (string.IsNullOrEmpty(match.Groups[ARRAY_DIM_COMPARISON_OPERATOR].Value.ToString()))
+                throw new Exception("Invalid array dimension comparison operator: must not be null or empty");
+
+            ArrayDimensionComparisonOperator = new Operator(match.Groups[ARRAY_DIM_COMPARISON_OPERATOR].Value);
+        }
+
+        private void ValidateArrayDimensionRange(Match match)
+        {
+            if (!int.TryParse(match.Groups[ARRAY_DIM_RANGE_FIRST_VALUE].Value, out int arrayDimensionRangeFirstValue))
+                throw new Exception("Invalid array dimension range first value: must be a number");
+            if (!int.TryParse(match.Groups[ARRAY_DIM_RANGE_SECOND_VALUE].Value, out int arrayDimensionRangeSecondValue))
+                throw new Exception("Invalid array dimension range second value: must be a number");
+            
+            ArrayDimensionRangeFirstValue = arrayDimensionRangeFirstValue;
+            ArrayDimensionRangeSecondValue = arrayDimensionRangeSecondValue;
+        }
+
+        private void ValidateArrayDimensionValue(Match match)
+        {
+            if (!int.TryParse(match.Groups[ARRAY_DIM_VALUE].Value, out int arrayDimensionValue))
+                throw new Exception("Invalid array dimension value: must be a number");
+            ArrayDimensionValue = arrayDimensionValue;
+        }
+    }
+}

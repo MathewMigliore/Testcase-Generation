@@ -2,135 +2,135 @@ namespace TestCaseGenerator
 {
     public static class CreateIntegerTestCases
     {
-        public static string GenerateIntegerValues(GroupInteger groupInteger)
+        public static List<int> GenerateIntegerValues(GroupInteger groupInteger)
         {
-            List<int> ints = new List<int>();
-            if (groupInteger.IntegerRangeSuccess)
-            {
-                ints = HasRange(groupInteger);
-            }
-            else if (groupInteger.IntegerOperatorSuccess)
-            {
-                ints = HasSign(groupInteger);
-            }
-
             if (groupInteger.OrderSuccess)
-            {
-                if (groupInteger.Order.Ascending)
-                {
-                    ints.Sort();
-                }
-                else if (groupInteger.Order.Descending)
-                {
-                    ints.Sort();
-                    ints.Reverse();
-                }
-            }
+                return OrderSuccess(groupInteger, 
+                    DelegateGroups(groupInteger));
             
-            return IntListToString(ints);
+            return DelegateGroups(groupInteger);
         }
-        private static string IntListToString(List<int> ints)
+
+        private static List<int> OrderSuccess(GroupInteger groupInteger, List<int> ints)
         {
-            string str = "";
-            foreach (int i in ints)
-            {
-                str += i + "\n";
-            }
-            return str;
+            if (groupInteger.Order.Ascending)
+                return ints.OrderBy(x => x).ToList();
+            
+            if (groupInteger.Order.Descending)
+                return ints.OrderByDescending(x => x).ToList();
+            
+            throw new Exception("Invalid order");
+
         }
-        private static List<int> HasSign(GroupInteger groupInteger)
+
+        private static List<int> DelegateGroups(GroupInteger groupInteger)
+        {
+            if (groupInteger.IntegerRangeSuccess)
+                return IntegerRangeSuccess(groupInteger);
+            
+            if (groupInteger.IntegerOperatorSuccess)
+                return IntegerOperatorSuccess(groupInteger);
+
+            throw new Exception("Invalid group (how did you even get here?))");
+        }
+
+        private static List<int> IntegerOperatorSuccess(GroupInteger groupInteger)
+        {
+            if (groupInteger.IntegerComparisonOperator.IsEquals)
+                return Enumerable.Repeat(groupInteger.IntegerValue, groupInteger.QuantityOfTestCases).ToList();
+
+            if (groupInteger.IncrementSuccess)
+                return HasOperatorWithIncrement(groupInteger);
+
+            return HasOperator(groupInteger);
+        }
+
+        private static List<int> IntegerRangeSuccess(GroupInteger groupInteger)
+        {
+            if (groupInteger.IncrementSuccess)
+                return HasIncrementAndRange(groupInteger);
+
+            return HasRange(groupInteger);
+        }
+
+        private static List<int> HasOperatorWithIncrement(GroupInteger groupInteger)
+        {
+           int endingValue = groupInteger.IntegerComparisonOperator.IsGreaterThan
+            ? groupInteger.IntegerValue
+            : groupInteger.IntegerValue - 1;
+
+            return GenerateIntegersWithIncrement(groupInteger);
+            
+        }
+        private static List<int> HasOperator(GroupInteger groupInteger)
         {
             List<int> ints = new List<int>();
-
-            if (groupInteger.IntegerComparisonOperator.IsEquals)
-            {
-                return Enumerable.Repeat(groupInteger.IntegerValue, groupInteger.QuantityOfTestCases).ToList();
-            }
 
             if (groupInteger.IntegerComparisonOperator.IsGreaterThan)
-            {
-                if (groupInteger.IncrementSuccess)
-                {
-                    int endingValue = CalculateWithEndOfIncrement(groupInteger.IncrementOperator, groupInteger.IncrementValue, groupInteger.QuantityOfTestCases);
-
-                    return HasIncrement(groupInteger.IncrementOperator, groupInteger.IncrementValue, groupInteger.IntegerValue, endingValue, groupInteger.QuantityOfTestCases);
-
-                }
-                else
-                {
-                    return Enumerable.Range(0, groupInteger.QuantityOfTestCases)
+                return Enumerable.Range(0, groupInteger.QuantityOfTestCases)
                      .Select(_ => new Random().Next(groupInteger.IntegerValue, int.MaxValue)).ToList();
-                }
-            }
-            else if (groupInteger.IntegerComparisonOperator.IsLessThan)
-            {
-                if (groupInteger.IncrementSuccess)
-                {
-                    int endingValue = CalculateWithEndOfIncrement(groupInteger.IncrementOperator, groupInteger.IncrementValue, groupInteger.QuantityOfTestCases);
 
-                    return HasIncrement(groupInteger.IncrementOperator, groupInteger.IncrementValue, groupInteger.IntegerValue, endingValue, groupInteger.QuantityOfTestCases);
-                }
-                else
-                {
-                    return Enumerable.Range(0, groupInteger.QuantityOfTestCases)
-                     .Select(_ => new Random().Next(int.MinValue, groupInteger.IntegerValue)).ToList();
-                }
-                
-            }
-            else
-            {
-                throw new Exception("Invalid sign (how did you even get here?))");
-            }
+            if (groupInteger.IntegerComparisonOperator.IsLessThan)
+                return Enumerable.Range(0, groupInteger.QuantityOfTestCases)
+                     .Select(_ => new Random().Next(int.MinValue, groupInteger.IntegerValue)).ToList();                
+            
+            throw new Exception("Invalid sign (how did you even get here?))");
+            
         }
+        private static List<int> GenerateIntegersWithIncrement(GroupInteger groupInteger)
+        {
+            Func<int, int> operation = GenerateIncrementOperation(groupInteger);
 
-        private static int CalculateWithEndOfIncrement(IncrementOperator incrementOperator, int incrementValue, int quantityOfTestCases)
-        {
-            if (incrementOperator.IsPlus)
-                return incrementValue * quantityOfTestCases;
-            else if (incrementOperator.IsMinus)
-                return -(incrementValue * quantityOfTestCases);
-            else if (incrementOperator.IsMultiply)
-                return incrementValue ^ quantityOfTestCases;
-            else if (incrementOperator.IsDivide)
-                return 1 / (incrementValue ^ quantityOfTestCases);
-            else
-                throw new Exception("Invalid increment sign");
-        }
-        
-        private static List<int> HasIncrement(IncrementOperator incrementOperator, int incrementValue, int start, int end, int quantityOfTestCases)
-        {
-            List<int> ints = new List<int>();            
-            if (incrementOperator.IsPlus)
+            List<int> ints = new List<int>();
+
+            int currentValue = groupInteger.IncrementValue;
+
+            while (ints.Count < groupInteger.QuantityOfTestCases)
             {
-                for (int i = start; i < end && ints.Count < quantityOfTestCases; i += incrementValue) { ints.Add(i); }
-            }
-            else if (incrementOperator.IsMinus)
-            {
-                for (int i = start; i > end && ints.Count < quantityOfTestCases; i -= incrementValue)  { ints.Add(i); }
-            }
-            else if (incrementOperator.IsMultiply)
-            {
-                for (int i = start; i < end && ints.Count < quantityOfTestCases; i *= incrementValue)  { ints.Add(i); }
-            }
-            else if (incrementOperator.IsDivide)
-            {
-                for (int i = start; i < end && ints.Count < quantityOfTestCases; i /= incrementValue)  { ints.Add(i); }
+                currentValue = operation(currentValue);
+                ints.Add(currentValue);
             }
             return ints;
         }
+
+        private static List<int> HasIncrementAndRange(GroupInteger groupInteger)
+        {
+            List<int> ints = new List<int>();
+            Func<int, int> operation = GenerateIncrementOperation(groupInteger);
+            for 
+            (   
+                int i = groupInteger.IntegerRangeFirstValue;
+
+                (
+                    groupInteger.IncrementOperator.IsMinus || groupInteger.IncrementOperator.IsDivide 
+                    ? i > groupInteger.IntegerRangeSecondValue
+                    : i < groupInteger.IntegerRangeSecondValue
+                )
+
+                && ints.Count < groupInteger.QuantityOfTestCases;
+                
+                i = operation(i)
+            )
+            {
+                ints.Add(i);
+            }
+            return ints;
+        }
+
+        private static Func<int, int> GenerateIncrementOperation(GroupInteger groupInteger)
+        {
+            return groupInteger.IncrementOperator.IsPlus ? (Func<int, int>)(x => x + groupInteger.IncrementValue)
+                : groupInteger.IncrementOperator.IsMinus ? (x => x - groupInteger.IncrementValue)
+                : groupInteger.IncrementOperator.IsMultiply ? (x => x * groupInteger.IncrementValue)
+                : groupInteger.IncrementOperator.IsDivide ? (x => x / groupInteger.IncrementValue)
+                : throw new ArgumentException("Invalid increment operator");
+        }
+
         private static List<int> HasRange(GroupInteger groupInteger)
         {
             List<int> ints = new List<int>();
-
-            if (groupInteger.IncrementSuccess)
-            {
-                return HasIncrement(groupInteger.IncrementOperator, groupInteger.IncrementValue, groupInteger.IntegerRangeFirstValue, groupInteger.IntegerRangeSecondValue, groupInteger.QuantityOfTestCases);
-            }
-            else
-            {
-                return Enumerable.Range(0, groupInteger.QuantityOfTestCases)
+            return Enumerable.Range(0, groupInteger.QuantityOfTestCases)
                  .Select(_ => new Random().Next(groupInteger.IntegerRangeFirstValue, groupInteger.IntegerRangeSecondValue)).ToList();
-            }
         }
 
         

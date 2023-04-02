@@ -1,0 +1,201 @@
+using System.Text.RegularExpressions;
+using static TestCaseGenerator.RegexConstants;
+
+namespace TestCaseGenerator
+{
+    public class GroupNbyMMatrix : GroupArray
+    {
+
+        public int NbyMFirstValue
+        {
+            get => _nbyMFirstValue;
+            set
+            {
+                if (value < 1)
+                    throw new Exception("Invalid nbyM first value: must be greater than 0");
+                _nbyMFirstValue = value;
+            }
+        }
+        public int NbyMSecondValue
+        {
+            get => _nbyMSecondValue;
+            set
+            {
+                if (value < 1)
+                    throw new Exception("Invalid nbyM second value: must be greater than 0");
+                _nbyMSecondValue = value;
+            }
+        }
+        public Operator NbyMComparisonOperator
+        {
+            get => _nbyMComparisonOperator;
+            set
+            {
+                if (value == null)
+                    throw new Exception("Invalid nbyM comparison operator: must not be null");
+                _nbyMComparisonOperator = value;
+            }
+        }
+        public int NbyMValue
+        {
+            get => _nbyMValue;
+            set
+            {
+                if (value < 1)
+                    throw new Exception("Invalid nbyM value: must be greater than 0");
+                _nbyMValue = value;
+            }
+        }
+
+        private int _nbyMFirstValue;
+        private int _nbyMSecondValue;
+        private Operator _nbyMComparisonOperator;
+        private int _nbyMValue;
+
+        public bool NbyMValueSuccess { get; }
+        public bool NbyMRangeSuccess { get; }
+        public bool NbyMComparisonOperatorSuccess { get; }
+
+        public GroupNbyMMatrix(Match match) : base(match)
+        {
+            if (NbyMValueSuccess = match.Groups[NBYM_DIM_VALUE].Success)
+            {
+                ValidateNbyMValue(match);
+            }
+            if (NbyMRangeSuccess = match.Groups[GROUP_NBYM_RANGE].Success)
+            {
+                ValidateNbyMRange(match);
+            }
+            if (NbyMComparisonOperatorSuccess = match.Groups[NBYM_DIM_COMPARISON_OPERATOR].Success)
+            {
+                ValidateNbyMComparisonOperator(match);
+            }
+        }
+
+        private void ValidateNbyMComparisonOperator(Match match)
+        {
+            if (string.IsNullOrEmpty(match.Groups[NBYM_DIM_COMPARISON_OPERATOR].Value.ToString()))
+                throw new Exception("Invalid nbyM comparison operator: must not be null or empty");
+
+            NbyMComparisonOperator = new Operator(match.Groups[NBYM_DIM_COMPARISON_OPERATOR].Value);
+        }
+
+        private void ValidateNbyMRange(Match match)
+        {
+            if (!int.TryParse(match.Groups[NBYM_DIM_RANGE_FIRST_VALUE].Value, out int nbyMRangeFirstValue))
+                throw new Exception("Invalid nbyM range first value: must be a number");
+            if (!int.TryParse(match.Groups[NBYM_DIM_RANGE_SECOND_VALUE].Value, out int nbyMRangeSecondValue))
+                throw new Exception("Invalid nbyM range second value: must be a number");
+
+            NbyMFirstValue = nbyMRangeFirstValue;
+            NbyMSecondValue = nbyMRangeSecondValue;
+        }
+
+        private void ValidateNbyMValue(Match match)
+        {
+            if (!int.TryParse(match.Groups[NBYM_DIM_VALUE].Value, out int nbyMValue))
+                throw new Exception("Invalid nbyM value: must be a number");
+            NbyMValue = nbyMValue;
+        }
+
+
+    }
+
+    public class GroupNbyNMatrix : GroupInteger
+    {
+        private int _nbyNFirstValue;
+        private int _nbyNSecondValue;
+        private Operator _nbyNComparisonOperator;
+        private int _nbyNValue;
+
+        public int NbyNFirstValue
+        {
+            get => _nbyNFirstValue;
+            set
+            {
+                if (value < 1)
+                    throw new Exception("Invalid nbyn dimension range first value: must be greater than 0");
+                _nbyNFirstValue = value;
+            }
+        }
+        public int NbyNSecondValue
+        {
+            get => _nbyNSecondValue;
+            set
+            {
+                if (value < 1)
+                    throw new Exception("Invalid nbyn dimension range second value: must be greater than 0");
+                _nbyNSecondValue = value;
+            }
+        }
+        public Operator NbyNComparisonOperator
+        {
+            get => _nbyNComparisonOperator;
+            set
+            {
+                if (value == null)
+                    throw new Exception("Invalid nbyn dimension comparison operator: must not be null");
+                _nbyNComparisonOperator = value;
+            }
+        }
+        public int NbyNValue
+        {
+            get => _nbyNValue;
+            set
+            {
+                if (value < 1)
+                    throw new Exception("Invalid nbyn dimension value: must be greater than 0");
+                _nbyNValue = value;
+            }
+        }
+
+        public bool NbyNValueSuccess { get; }
+        public bool NbyNRangeSuccess { get; }
+        public bool NbyNComparisonOperatorSuccess { get; }
+
+
+        public GroupNbyNMatrix(Match match) : base(match)
+        {
+            if (NbyNValueSuccess = match.Groups[NBYN_DIM_VALUE].Success)
+            {
+                ValidateNbyNValue(match);
+            }
+            if (NbyNRangeSuccess = match.Groups[GROUP_NBYN_RANGE].Success)
+            {
+                ValidateNbyNRange(match);
+            }
+            if (NbyNComparisonOperatorSuccess = match.Groups[NBYN_DIM_COMPARISON_OPERATOR].Success)
+            {
+                ValidateNbyNComparisonOperator(match);
+            }
+        }
+
+        private void ValidateNbyNComparisonOperator(Match match)
+        {
+            if (string.IsNullOrEmpty(match.Groups[NBYN_DIM_COMPARISON_OPERATOR].Value.ToString()))
+                throw new Exception("Invalid nbyn comparison operator: must not be null or empty");
+
+            NbyNComparisonOperator = new Operator(match.Groups[NBYN_DIM_COMPARISON_OPERATOR].Value);
+        }
+
+        private void ValidateNbyNRange(Match match)
+        {
+            if (!int.TryParse(match.Groups[NBYN_DIM_RANGE_FIRST_VALUE].Value, out int nbyNRangeFirstValue))
+                throw new Exception("Invalid nbyn range first value: must be a number");
+            if (!int.TryParse(match.Groups[NBYN_DIM_RANGE_SECOND_VALUE].Value, out int nbyNRangeSecondValue))
+                throw new Exception("Invalid nbyn range second value: must be a number");
+
+            NbyNFirstValue = nbyNRangeFirstValue;
+            NbyNSecondValue = nbyNRangeSecondValue;
+        }
+
+        private void ValidateNbyNValue(Match match)
+        {
+            if (!int.TryParse(match.Groups[NBYN_DIM_VALUE].Value, out int nbyNValue))
+                throw new Exception("Invalid nbyn value: must be a number");
+            NbyNValue = nbyNValue;
+        }
+
+
+    }
+}

@@ -95,30 +95,15 @@ namespace TestCaseGenerator
 
         private string GenerateIntTestCases(string input)
         {
+            
             // Parse and validate the input string
-            var intRegex = new Regex(@"int\{(?:2d(?:_nbyn)?:(?<group_matrix>(?<group_nbyn>(?<group_nbyn_operator>(?<nbyn_dim_comparison_operator><|>|=)(?<nbyn_dim_value>\d+))|(?<group_nbyn_range>(?<nbyn_dim_range_first_value>[+\-]?\d+)\.\.(?<nbyn_dim_range_second_value>[+\-]?\d+)))?(?: 1d:.+?)|(?<group_nbym_operator>(?<nbym_dim_comparison_operator><|>|=)(?<nbym_dim_value>\d+))?)? )?(?:1d:(?<group_array>(?<group_array_operator>(?<array_dim_comparison_operator><|>|=)(?<array_dim_value>\d+))|(?<group_array_range>(?<array_dim_range_fist_value>[+\-]?\d+)\.\.(?<array_dim_range_second_value>[+\-]?\d+)))? )?val:(?<group_integer>(?<group_integer_operator>(?<integer_comparison_operator>>|<|=)(?<integer_value>[+\-]?\d+))|(?<group_integer_range>(?<integer_range_first_value>[+\-]?\d+)\.\.(?<integer_range_second_value>[+\-]?\d+)))(?: inc:(?<group_increment>(?<increment_operator>[+\-\*\/])(?<increment_value>\d+)))?(?: order:(?<order>asc|desc))?(?: amt:(?<quantity_of_test_cases>\d+))?\}");
+            var intRegex = new Regex(@"int\{(?:2d(?<group_matrix>(?<group_nbyn>(?:_nbyn:(?:(?<group_nbyn_operator>(?<nbyn_dim_comparison_operator><|>|=)(?<nbyn_dim_value>\d+))|(?<group_nbyn_range>(?<nbyn_dim_range_first_value>[+\-]?\d+)\.\.(?<nbyn_dim_range_second_value>[+\-]?\d+))))?)?|:(?:(?<group_nbym_operator>(?<nbym_dim_comparison_operator><|>|=)(?<nbym_dim_value>\d+))|(?<group_nbym_range>(?<nbym_dim_range_first_value>[+\-]?\d+)\.\.(?<nbym_dim_range_second_value>[+\-]?\d+))))? )?(?:1d:(?<group_array>(?<group_array_operator>(?<array_dim_comparison_operator><|>|=)(?<array_dim_value>\d+))|(?<group_array_range>(?<array_dim_range_fist_value>[+\-]?\d+)\.\.(?<array_dim_range_second_value>[+\-]?\d+)))? )?val:(?<group_integer>(?<group_integer_operator>(?<integer_comparison_operator>>|<|=)(?<integer_value>[+\-]?\d+))|(?<group_integer_range>(?<integer_range_first_value>[+\-]?\d+)\.\.(?<integer_range_second_value>[+\-]?\d+)))(?: inc:(?<group_increment>(?<increment_operator>[+\-\*\/])(?<increment_value>\d+)))?(?: order:(?<order>asc|desc))?(?: amt:(?<quantity_of_test_cases>\d+))?\}");
             var match = intRegex.Match(input);
             if (!match.Success)
             {
                 throw new ArgumentException("Invalid input format.");
             }
-            
-
-            if (match.Groups[GROUP_INTEGER].Success)
-            {                 
-                return CreateIntegerTestCases.GenerateIntegerValues(new GroupInteger(match));
-            }
-            else if (match.Groups[GROUP_ARRAY].Success)
-            {
-                // Generate 1D array based on the matched group values
-                
-
-                // ... (Implement logic to generate 1D array)
-
-                // Add the generated integers to the list
-                //generatedIntegers.AddRange(/* generated 1D array */);
-            }
-            else if (match.Groups[GROUP_MATRIX].Success)
+            if (match.Groups[GROUP_MATRIX].Success)
             {
                 // Generate 2D matrix based on the matched group values
 
@@ -126,22 +111,28 @@ namespace TestCaseGenerator
 
                 // Add the generated integers to the list (flatten the 2D matrix)
                 //generatedIntegers.AddRange(/* flattened 2D matrix */);
+                throw new NotImplementedException();
             }
 
-            if (match.Groups[ORDER].Success)
+            if (match.Groups[GROUP_ARRAY].Success)
             {
-                if (match.Groups[ORDER].Value == "asc")
-                {
-                    //generatedIntegers.Sort();
-                }
-                else if (match.Groups[ORDER].Value == "desc")
-                {
-                   //generatedIntegers.Sort();
-                   // generatedIntegers.Reverse();
-                }
+                // Generate 1D array based on the matched group values
+                
+                
+                // ... (Implement logic to generate 1D array)
+
+                // Add the generated integers to the list
+                //generatedIntegers.AddRange(/* generated 1D array */);
+                throw new NotImplementedException();
             }
 
-            return "";
+            if (match.Groups[GROUP_INTEGER].Success)          
+                return IntListToString(CreateIntegerTestCases.GenerateIntegerValues(new GroupInteger(match)));
+
+
+
+            throw new ArgumentException("Invalid input format.");
+            
         }
 
 
@@ -347,6 +338,15 @@ namespace TestCaseGenerator
             }
 
             return testCases;
+        }
+        private static string IntListToString(List<int> ints)
+        {
+            string str = "";
+            foreach (int i in ints)
+            {
+                str += i + "\n";
+            }
+            return str;
         }
         private string TestCaseToString(object testCase)
         {

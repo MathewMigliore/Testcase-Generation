@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\100624914\\OneDrive\\Documents\\GitHub\\Side-Projects\\Algorithms\\C#\\TestCaseGeneration\\TestCaseGeneration\\TestCaseGeneration.csproj",
+      "projectUniqueName": "C:\\Users\\100624914\\OneDrive\\Documents\\GitHub\\Testcase-Generation\\TestCaseGeneration\\TestCaseGeneration.csproj",
       "projectName": "TestCaseGeneration",
-      "projectPath": "C:\\Users\\100624914\\OneDrive\\Documents\\GitHub\\Side-Projects\\Algorithms\\C#\\TestCaseGeneration\\TestCaseGeneration\\TestCaseGeneration.csproj",
+      "projectPath": "C:\\Users\\100624914\\OneDrive\\Documents\\GitHub\\Testcase-Generation\\TestCaseGeneration\\TestCaseGeneration.csproj",
       "packagesPath": "C:\\Users\\100624914\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\100624914\\OneDrive\\Documents\\GitHub\\Side-Projects\\Algorithms\\C#\\TestCaseGeneration\\TestCaseGeneration\\obj\\",
+      "outputPath": "C:\\Users\\100624914\\OneDrive\\Documents\\GitHub\\Testcase-Generation\\TestCaseGeneration\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\100624914\\AppData\\Roaming\\NuGet\\NuGet.Config",

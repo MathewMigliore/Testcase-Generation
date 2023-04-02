@@ -21,6 +21,9 @@ namespace TestCaseGenerator
         public const string GROUP_NBYN_RANGE = "group_nbyn_range";
         public const string NBYN_DIM_RANGE_FIRST_VALUE = "nbyn_dim_range_first_value";
         public const string NBYN_DIM_RANGE_SECOND_VALUE = "nbyn_dim_range_second_value";
+        public const string GROUP_NBYM_RANGE = "group_nbym_range";
+        public const string NBYM_DIM_RANGE_FIRST_VALUE = "nbym_dim_range_first_value";
+        public const string NBYM_DIM_RANGE_SECOND_VALUE = "nbym_dim_range_second_value";
         public const string GROUP_NBYM_OPERATOR = "group_nbym_operator";
         public const string NBYM_DIM_COMPARISON_OPERATOR = "nbym_dim_comparison_operator";
         public const string NBYM_DIM_VALUE = "nbym_dim_value";
