@@ -16,55 +16,57 @@ namespace TestCaseGenerator
     public class CreateTestCases
     {
         /// <summary>
-        /// Takes a string input and generates test cases according to the specified format.
-        /// Supports generating test cases for different data types, such as integers, floating-point numbers, strings, and n by n arrays of integers.
+        /// Takes a string input and generates test cases according to the specified format through the use of Regex.
+        /// Supports generating test cases for integers and n by n arrays of integers.
         ///
         /// The input string uses a custom syntax to define the properties of the generated test cases:
         ///
         /// For integers:
-
-        /// - i:RANGE - The range of integer values. Example: i:1..10
-        /// - t:NUM - The number of test cases to generate. Example: t:5
-        /// - o:ORDER - The order in which the integers should be generated. Can be one of the following:
-        ///     - o:asc - Generate integers in ascending order.
-        ///     - o:desc - Generate integers in descending order.
-        /// - inc:INCREMENT - The increment by which the integers should increase. Example: inc:2
-        /// - exp:BASE - The base for exponential increments. Example: exp:2
-        /// - func:FUNCTION - A mathematical function to generate integer values. Example: func:x^2
         ///
+        /// - There are two possible input methods:
+        ///     The range of integer values. Example: 1..10
+        ///     Using an operator and an integer. Example: >10, <10, =10
+        /// 
+        /// Let NUM..NUM be RANGE, where NUM..NUM is the correct syntax to define a range.
+        /// Let {>, <, =} be COMPARISON_OPERATOR, where {>, <, =} is the set of values allowed in the corrext syntax.
+        /// Let {+, -, *, /} be OPERATOR, where {+, -, *, /} is the set of values allowed in the correct syntax.
+        /// 
+        /// - val:(RANGE | COMPARISON_OPERATOR NUM)  - The number of test cases to generate. Example: val:>10, <10, =10, 1..10
+        /// - inc:OPERATOR NUM - The increment by which the integers should increase. Example: inc:+2
+        /// - order:ORDER - The order in which the integers should be generated. Can be one of the following:
+        ///     - asc - Generate integers in ascending order.
+        ///     - desc - Generate integers in descending order.
+        /// - amt:NUM - The number of total test cases. Example: amt:10
+        /// 
+        /// If there is no amount specified, the default is 10.
+        /// If there is no inc or order, it will generate random integers defined by the range or comparison specified.
         ///
-        /// For floating-point numbers:
-        /// - f:RANGE - The range of floating-point values. Example: f:1.0..10.0
-        /// - d:NUM - The number of decimal places. Example: d:2
-        /// - t:NUM - The number of test cases to generate. Example: t:5
+        /// Defines the dimension of an array of integers:
+        /// - 1d:(RANGE | COMPARISON_OPERATOR) NUM - The size of the array. Example: 1d:=10, 1d:>5, 1d:5..10
         ///
-        /// For strings:
-        /// - s:LENGTH - The length of the generated strings. Example: s:10
-        /// - c:CHARSET - The character set used for the generated strings. Can be one of the following:
-        ///     - c:words - A predefined set of words (e.g., apple, banana, orange).
-        ///     - c:lowercase - Lowercase letters (a-z).
-        ///     - c:uppercase - Uppercase letters (A-Z).
-        ///     - c:nonletters - Non-letter characters (digits and symbols).
-        ///     - c:all - All available characters (letters, digits, and symbols).
-        ///     - c:[CUSTOM] - A custom set of characters defined by the user. Example: c:[abc123]
-        /// - t:NUM - The number of test cases to generate. Example: t:5
-        ///
-        /// For n by n array of integers:
-        /// - a:RANGE - The range of integer values. Example: a:1..10
-        /// - n:SIZE - The size of the n by n array. Example: n:3
-        /// - t:NUM - The number of test cases to generate. Example: t:2
+        /// Defines the dimensions of an n by m matrix of integers:
+        /// - 2d:(RANGE | COMPARISON_OPERATOR) NUM 1d:(RANGE | COMPARISON_OPERATOR) NUM - The size of the matrix. Example: 2d:=3 1d:=1, 2d:>3 1d:10..20
+        /// 
+        /// 
+        /// Defines the dimensions for an n by n matrices of integers:
+        /// - 2d_nbyn:(RANGE | COMPARISON_OPERATOR) - The size of the n by n matrix. Example: 2d_nbyn:=2, 2d_nbyn:>2
         ///
         /// Input examples:
         ///
-        /// For integers:
-        /// 1. "int{i:1..100_t:5}" - Generates 5 test cases of integers in the range 1 to 100.
-        /// ...
-        /// 10. "int{i:50..100_t:8}" - Generates 8 test cases of integers in the range 50 to 100.
+        /// For single integers:
+        ///     "int{val:1..100 amt:5}" - Generates 5 test cases of integers in the range 1 to 100.
+        ///     "int{val:>20 inc:-2 amt:5}" - Generates 5 test cases of integers greater than 20, decreasing by 2.
         ///
-        /// For n by n array of integers:
-        /// 1. "array{a:1..100_n:3_t:2}" - Generates 2 test cases of 3x3 arrays with integer values in the range 1 to 100.
+        /// For arrays of integers:
+        ///     "int{1d:=10 val:2..10 inc:*10 order:desc}" - Generates an array of size 10 with integers in the range 2 to 10, increasing by a factor of 10, then sorted decending.
         ///
+        /// For n by m matrix of integers:
+        ///     "int{2d:=3 1d:=2 val:<-100}" - Generates a 3x2 matrix of integers with values less than -100.
+        /// 
+        /// For n by n matrix of integers:
+        ///     "int{2d_nbyn:=5 val:10..20 order:asc}" - Generates a 5x5 matrix of integers in the range 10 to 20, the values being in ascending order.
         /// </summary>
+
 
 
         public string Generate(string input)
@@ -72,7 +74,6 @@ namespace TestCaseGenerator
             Console.WriteLine(input);
             if (input.StartsWith("int"))
             {
-
                 return GenerateIntTestCases(input);
             }
             else if (input.StartsWith("float"))
@@ -99,10 +100,11 @@ namespace TestCaseGenerator
             // Parse and validate the input string
             var intRegex = new Regex(@"int\{(?:2d(?<group_matrix>(?<group_nbyn>(?:_nbyn:(?:(?<group_nbyn_operator>(?<nbyn_dim_comparison_operator><|>|=)(?<nbyn_dim_value>\d+))|(?<group_nbyn_range>(?<nbyn_dim_range_first_value>[+\-]?\d+)\.\.(?<nbyn_dim_range_second_value>[+\-]?\d+))))?)?|:(?:(?<group_nbym_operator>(?<nbym_dim_comparison_operator><|>|=)(?<nbym_dim_value>\d+))|(?<group_nbym_range>(?<nbym_dim_range_first_value>[+\-]?\d+)\.\.(?<nbym_dim_range_second_value>[+\-]?\d+))))? )?(?:1d:(?<group_array>(?<group_array_operator>(?<array_dim_comparison_operator><|>|=)(?<array_dim_value>\d+))|(?<group_array_range>(?<array_dim_range_fist_value>[+\-]?\d+)\.\.(?<array_dim_range_second_value>[+\-]?\d+)))? )?val:(?<group_integer>(?<group_integer_operator>(?<integer_comparison_operator>>|<|=)(?<integer_value>[+\-]?\d+))|(?<group_integer_range>(?<integer_range_first_value>[+\-]?\d+)\.\.(?<integer_range_second_value>[+\-]?\d+)))(?: inc:(?<group_increment>(?<increment_operator>[+\-\*\/])(?<increment_value>\d+)))?(?: order:(?<order>asc|desc))?(?: amt:(?<quantity_of_test_cases>\d+))?\}");
             var match = intRegex.Match(input);
+
             if (!match.Success)
-            {
                 throw new ArgumentException("Invalid input format.");
-            }
+            
+
             if (match.Groups[GROUP_MATRIX].Success)
             {
                 // Generate 2D matrix based on the matched group values
@@ -138,95 +140,8 @@ namespace TestCaseGenerator
 
         private List<object> GenerateFloatTestCases(string input)
         {
-            // Parse and validate the input string
-            var floatRegex = new Regex(@"float\{f:(?<range>[0-9.]+\.\.[0-9.]+)(?<sign>[-+]?)(?<exact>=?)_d:(?<decimal>\d+)_t:(?<count>\d+)(_o:(?<order>asc|desc))?(_inc:(?<increment>[0-9.]+))?(_exp:(?<exponent>[0-9.]+))?(_func:(?<function>[^_]+))?}");
-            var match = floatRegex.Match(input);
-            if (!match.Success)
-            {
-                throw new ArgumentException("Invalid float input format.");
-            }
-
-            var range = match.Groups["range"].Value.Split(new string[] { ".." }, StringSplitOptions.None).Select(double.Parse).ToArray();
-            string sign = match.Groups["sign"].Value;
-            string exact = match.Groups["exact"].Value;
-            int decimalPlaces = int.Parse(match.Groups["decimal"].Value);
-            int count = int.Parse(match.Groups["count"].Value);
-            string order = match.Groups["order"].Value;
-            string increment = match.Groups["increment"].Value;
-            string exponent = match.Groups["exponent"].Value;
-            string function = match.Groups["function"].Value;
-
-            if (range.Length != 2 || range[0] > range[1])
-            {
-                throw new ArgumentException("Invalid range specified.");
-            }
-
-            // Generate the test cases
-            var random = new Random();
-            var testCases = new List<object>();
-            double current = range[0];
-
-            for (int i = 0; i < count; i++)
-            {
-                double value;
-
-                if (!string.IsNullOrEmpty(exact))
-                {
-                    value = range[0];
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(order))
-                    {
-                        if (order == "asc")
-                        {
-                            value = current;
-                        }
-                        else
-                        {
-                            value = range[1] - (current - range[0]);
-                        }
-
-                        if (!string.IsNullOrEmpty(increment))
-                        {
-                            double inc = double.Parse(increment);
-                            current += inc;
-                        }
-                        else if (!string.IsNullOrEmpty(exponent))
-                        {
-                            double baseValue = double.Parse(exponent);
-                            double exponentValue = Math.Pow(baseValue, i);
-                            current = range[0] + exponentValue;
-                        }
-                        else if (!string.IsNullOrEmpty(function))
-                        {
-                            //value = EvaluateFunction(function, i);
-                        }
-                        else
-                        {
-                            value = random.NextDouble() * (range[1] - range[0]) + range[0];
-                        }
-                    }
-                    else
-                    {
-                        value = random.NextDouble() * (range[1] - range[0]) + range[0];
-                    }
-                }
-
-                if (sign == "-")
-                {
-                    value = -Math.Abs(value);
-                }
-                else if (sign == "+")
-                {
-                    value = Math.Abs(value);
-                }
-
-                double roundedValue = Math.Round(value, decimalPlaces);
-                testCases.Add(roundedValue);
-            }
-
-            return testCases;
+            
+            throw new ArgumentException("Invalid input format.");
         }
 
 

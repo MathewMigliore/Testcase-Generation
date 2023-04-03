@@ -31,7 +31,7 @@ namespace TestCaseGenerator
             if (groupInteger.IntegerOperatorSuccess)
                 return IntegerOperatorSuccess(groupInteger);
 
-            throw new Exception("Invalid group (how did you even get here?))");
+            throw new Exception("Invalid group)");
         }
 
         private static List<int> IntegerOperatorSuccess(GroupInteger groupInteger)
@@ -74,7 +74,7 @@ namespace TestCaseGenerator
                 return Enumerable.Range(0, groupInteger.QuantityOfTestCases)
                      .Select(_ => new Random().Next(int.MinValue, groupInteger.IntegerValue)).ToList();                
             
-            throw new Exception("Invalid sign (how did you even get here?))");
+            throw new Exception("Invalid operator");
             
         }
         private static List<int> GenerateIntegersWithIncrement(GroupInteger groupInteger)
